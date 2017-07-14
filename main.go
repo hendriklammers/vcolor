@@ -13,9 +13,8 @@ func main() {
 	args := os.Args
 
 	if len(args) < 2 {
-		// fmt.Fprintln(os.Stderr, "Please provide a valid hex color")
-		// os.Exit(1)
-		log.Fatal("Please provide a valid hex color")
+		fmt.Printf("usage: %s [hex-color]\n", os.Args[0])
+		os.Exit(1)
 	}
 
 	fmt.Println(parseColor(args[1]))
@@ -23,8 +22,12 @@ func main() {
 
 func parseColor(hex string) string {
 	re := regexp.MustCompile("(?i)^#?([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$")
-	values := make([]string, 3)
 
+	if !re.MatchString(hex) {
+		log.Fatal("Not a valid hex color")
+	}
+
+	values := make([]string, 3)
 	for index, match := range re.FindStringSubmatch(hex)[1:] {
 		num, err := strconv.ParseInt(match, 16, 16)
 		if err != nil {
