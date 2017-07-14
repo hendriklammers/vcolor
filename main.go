@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -17,21 +18,26 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(parseColor(args[1]))
+	vec, err := ParseColor(args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(vec)
 }
 
-func parseColor(hex string) string {
+// ParseColor takes hex color string and converts it to a string in vec3 format
+func ParseColor(hex string) (string, error) {
 	re := regexp.MustCompile("(?i)^#?([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$")
 
 	if !re.MatchString(hex) {
-		log.Fatal("Not a valid hex color")
+		return "", errors.New("Not a valid hex color")
 	}
 
 	values := make([]string, 3)
 	for index, match := range re.FindStringSubmatch(hex)[1:] {
 		num, err := strconv.ParseInt(match, 16, 16)
 		if err != nil {
-			log.Fatal(err)
+			return "", err
 		}
 
 		val := fmt.Sprintf("%.3f", float32(num)/255)
@@ -39,7 +45,7 @@ func parseColor(hex string) string {
 		values[index] = stripZeros(val)
 	}
 
-	return fmt.Sprintf("vec3(%v)", strings.Join(values, ", "))
+	return fmt.Sprintf("vec3(%v)", strings.Join(values, ", ")), nil
 }
 
 func stripZeros(str string) string {
