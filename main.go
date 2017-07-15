@@ -14,7 +14,6 @@ const regex = "(?i)^#?([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})?$"
 
 func main() {
 	args := os.Args
-
 	if len(args) < 2 {
 		fmt.Printf("usage: %s [hex-color]\n", os.Args[0])
 		os.Exit(1)
@@ -30,7 +29,6 @@ func main() {
 // ParseColor takes hex color string and converts it to a string in vec3 format
 func ParseColor(hex string) (string, error) {
 	re := regexp.MustCompile(regex)
-
 	if !re.MatchString(hex) {
 		return "", errors.New("Not a valid hex color")
 	}
