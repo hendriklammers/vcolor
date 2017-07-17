@@ -19,18 +19,22 @@ func main() {
 		os.Exit(1)
 	}
 
-	vec, err := ParseColor(args[1])
-	if err != nil {
-		log.Fatal(err)
+	for _, hex := range args[1:] {
+		vec, err := ParseColor(hex)
+		if err != nil {
+			// Maybe should just print error instead of exit?
+			log.Fatal(err)
+		}
+		fmt.Println(vec)
 	}
-	fmt.Println(vec)
 }
 
 // ParseColor takes hex color string and converts it to a string in vec3 format
 func ParseColor(hex string) (string, error) {
 	re := regexp.MustCompile(regex)
 	if !re.MatchString(hex) {
-		return "", errors.New("Not a valid hex color")
+		msg := fmt.Sprintf("%s is not a valid hex color", hex)
+		return "", errors.New(msg)
 	}
 
 	var values []string
