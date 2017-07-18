@@ -2,24 +2,52 @@ package main
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"log"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/hendriklammers/vcolor/colourlovers"
 )
 
 const regex = "(?i)^#?([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})?$"
 
+var paletteFlag = flag.Int(
+	"p",
+	0,
+	"get a palette by ID from the Colourlovers API",
+)
+
+var randomFlag = flag.Bool(
+	"r",
+	false,
+	"get a random palette from the Colourlovers API",
+)
+
 func main() {
-	args := os.Args
-	if len(args) < 2 {
-		fmt.Printf("usage: %s [hex-color]\n", os.Args[0])
-		os.Exit(1)
+	flag.Parse()
+
+	var colors []string
+
+	if *paletteFlag > 0 {
+		var err error
+		colors, err = colourlovers.Palette(*paletteFlag)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		args := os.Args
+		if len(args) < 2 {
+			fmt.Printf("usage: %s [hex-color]\n", os.Args[0])
+			os.Exit(1)
+		}
+		colors = args[1:]
 	}
 
-	for _, hex := range args[1:] {
+	for _, hex := range colors {
 		vec, err := ParseColor(hex)
 		if err != nil {
 			// Maybe should just print error instead of exit?
