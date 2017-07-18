@@ -21,6 +21,33 @@ type response []palette
 func Palette(id int) ([]string, error) {
 	url := fmt.Sprintf("http://www.colourlovers.com/api/palette/%d?format=json", id)
 
+	data, err := getJSON(url)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(data) < 1 {
+		return nil, errors.New("No palette found for provided ID")
+	}
+	return data[0].Colors, nil
+}
+
+// RandomPalette gets a random color palette Colourlovers API
+func RandomPalette() ([]string, error) {
+	url := "http://www.colourlovers.com/api/palettes/random?format=json"
+
+	data, err := getJSON(url)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(data) < 1 {
+		return nil, errors.New("No random color palette returned from Colourlovers API")
+	}
+	return data[0].Colors, nil
+}
+
+func getJSON(url string) (response, error) {
 	// Using custom http client so a timeout can be set
 	client := &http.Client{
 		Timeout: time.Second * 5,
@@ -36,14 +63,5 @@ func Palette(id int) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	if len(data) < 1 {
-		return nil, errors.New("No palette found for provided ID")
-	}
-	return data[0].Colors, nil
-}
-
-// RandomPalette gets colors of a random palette from the Colourlovers API
-func RandomPalette() ([]string, error) {
-	return nil, nil
+	return data, nil
 }

@@ -30,11 +30,29 @@ var randomFlag = flag.Bool(
 func main() {
 	flag.Parse()
 
-	var colors []string
+	for _, hex := range getColors() {
+		vec, err := ParseColor(hex)
+		if err != nil {
+			// Maybe should just print error instead of exit?
+			log.Fatal(err)
+		}
+		fmt.Println(vec)
+	}
+}
+
+func getColors() []string {
+	var (
+		colors []string
+		err    error
+	)
 
 	if *paletteFlag > 0 {
-		var err error
 		colors, err = colourlovers.Palette(*paletteFlag)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else if *randomFlag {
+		colors, err = colourlovers.RandomPalette()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -47,14 +65,7 @@ func main() {
 		colors = args[1:]
 	}
 
-	for _, hex := range colors {
-		vec, err := ParseColor(hex)
-		if err != nil {
-			// Maybe should just print error instead of exit?
-			log.Fatal(err)
-		}
-		fmt.Println(vec)
-	}
+	return colors
 }
 
 // ParseColor takes hex color string and converts it to a string in vec3 format
