@@ -8,60 +8,73 @@ import (
 	"time"
 )
 
-type palette struct {
+// Color is used to store color json
+type Color struct {
+	ID          int    `json:"id"`
+	Description string `json:"description"`
+	Title       string `json:"title"`
+	Hex         string `json:"hex"`
+}
+
+// Palette is used to store color palette json
+type Palette struct {
 	ID          int      `json:"id"`
 	Description string   `json:"description"`
 	Title       string   `json:"title"`
 	Colors      []string `json:"colors"`
 }
 
-type response []palette
+// GetRandomColor gets a random color from the Colourlovers API
+func GetRandomColor() (string, error) {
+	url := "http://www.colourlovers.com/api/colors/random?format=json"
+	return getColorData(url)
+}
 
-// Palette gets colors of palette with provided id from the Colourlovers API
-func Palette(id int) ([]string, error) {
+// GetPalette gets colors of palette with provided id from the Colourlovers API
+func GetPalette(id int) ([]string, error) {
 	url := fmt.Sprintf("http://www.colourlovers.com/api/palette/%d?format=json", id)
-
-	data, err := getJSON(url)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(data) < 1 {
-		return nil, errors.New("No palette found for provided ID")
-	}
-	return data[0].Colors, nil
+	return getPaletteData(url)
 }
 
-// RandomPalette gets a random color palette Colourlovers API
-func RandomPalette() ([]string, error) {
+// GetRandomPalette gets a random color palette from the Colourlovers API
+func GetRandomPalette() ([]string, error) {
 	url := "http://www.colourlovers.com/api/palettes/random?format=json"
+	return getPaletteData(url)
+}
 
-	data, err := getJSON(url)
+func getColorData(url string) (string, error) {
+	var data []Color
+	err := getJSON(url, &data)
+	if err != nil {
+		return "", err
+	}
+	if len(data) < 1 {
+		return "", errors.New("No color returned from Colourlovers API")
+	}
+	return data[0].Hex, nil
+}
+
+func getPaletteData(url string) ([]string, error) {
+	var data []Palette
+	err := getJSON(url, &data)
 	if err != nil {
 		return nil, err
 	}
-
 	if len(data) < 1 {
-		return nil, errors.New("No random color palette returned from Colourlovers API")
+		return nil, errors.New("No color palette returned from Colourlovers API")
 	}
 	return data[0].Colors, nil
 }
 
-func getJSON(url string) (response, error) {
-	// Using custom http client so a timeout can be set
+func getJSON(url string, target interface{}) error {
 	client := &http.Client{
 		Timeout: time.Second * 5,
 	}
 	res, err := client.Get(url)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer res.Body.Close()
 
-	data := response{}
-	err = json.NewDecoder(res.Body).Decode(&data)
-	if err != nil {
-		return nil, err
-	}
-	return data, nil
+	return json.NewDecoder(res.Body).Decode(target)
 }

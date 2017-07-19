@@ -15,16 +15,24 @@ import (
 
 const regex = "(?i)^#?([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})?$"
 
-var paletteFlag = flag.Int(
-	"p",
-	0,
-	"get a palette by ID from the Colourlovers API",
-)
+var (
+	paletteFlag = flag.Int(
+		"p",
+		0,
+		"get a palette by ID from the Colourlovers API",
+	)
 
-var randomFlag = flag.Bool(
-	"r",
-	false,
-	"get a random palette from the Colourlovers API",
+	randomPaletteFlag = flag.Bool(
+		"rp",
+		false,
+		"get a random palette from the Colourlovers API",
+	)
+
+	randomColorFlag = flag.Bool(
+		"r",
+		false,
+		"get a random color from the Colourlovers API",
+	)
 )
 
 func main() {
@@ -46,13 +54,20 @@ func getColors() []string {
 		err    error
 	)
 
-	if *paletteFlag > 0 {
-		colors, err = colourlovers.Palette(*paletteFlag)
+	if *randomColorFlag {
+		var color string
+		color, err = colourlovers.GetRandomColor()
 		if err != nil {
 			log.Fatal(err)
 		}
-	} else if *randomFlag {
-		colors, err = colourlovers.RandomPalette()
+		colors = append(colors, color)
+	} else if *paletteFlag > 0 {
+		colors, err = colourlovers.GetPalette(*paletteFlag)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else if *randomPaletteFlag {
+		colors, err = colourlovers.GetRandomPalette()
 		if err != nil {
 			log.Fatal(err)
 		}
