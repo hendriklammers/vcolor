@@ -21,11 +21,7 @@ vec3(1.0, 0.89, 0.376)
 
 $ vcolor FFE360FF
 vec4(1.0, 0.89, 0.376, 1.0)
-```
 
-When the color is prefixed with a hash sign, the argument has to be
-surrounded by quotes:
-```
 $ vcolor "#FFE360"
 vec3(1.0, 0.89, 0.376)
 ```
@@ -41,12 +37,12 @@ vec3(0.431, 0.043, 0.129)
 vec3(0.608, 0.302, 0.451)
 ```
 
-A random color palette from [COLOURlovers](http://www.colourlovers.com/)
+Get a random color palette
 ```
 $ vcolor -rp
 ```
 
-A random color from [COLOURlovers](http://www.colourlovers.com/)
+Get a random color
 ```
 $ vcolor -r
 ```
