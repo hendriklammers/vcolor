@@ -83,7 +83,7 @@ func getColors() []string {
 	return colors
 }
 
-// ParseColor takes hex color string and converts it to a string in vec3 format
+// ParseColor takes hex color string and converts it to a string in vec3 or vec4 format
 func ParseColor(hex string) (string, error) {
 	re := regexp.MustCompile(regex)
 	if !re.MatchString(hex) {
