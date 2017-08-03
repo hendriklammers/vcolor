@@ -1,4 +1,4 @@
-# vcolor
+# vcolor [![Build Status](https://travis-ci.org/hendriklammers/vcolor.svg?branch=master)](https://travis-ci.org/hendriklammers/vcolor)
 
 A simple command-line tool that transforms RGB hex colors into vectors with
 normalized values that can easily be used in GLSL shaders.
