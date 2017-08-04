@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+const regex = "(?i)^#?([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})?$"
+
 // ParseColor takes hex color string and converts it to a string in vec3 format
 func ParseColor(hex string) (string, error) {
 	re := regexp.MustCompile(regex)

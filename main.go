@@ -9,8 +9,6 @@ import (
 	"github.com/hendriklammers/vcolor/colourlovers"
 )
 
-const regex = "(?i)^#?([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})?$"
-
 var (
 	paletteFlag = flag.Int(
 		"p",
