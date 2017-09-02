@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/hendriklammers/vcolor/colourlovers"
 )
@@ -33,7 +34,7 @@ func main() {
 	flag.Parse()
 
 	for _, color := range getColors() {
-		hex, ok := colorNames[color]
+		hex, ok := colorNames[strings.ToLower(color)]
 		if !ok {
 			hex = color
 		}
