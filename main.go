@@ -32,7 +32,11 @@ var (
 func main() {
 	flag.Parse()
 
-	for _, hex := range getColors() {
+	for _, color := range getColors() {
+		hex, ok := colorNames[color]
+		if !ok {
+			hex = color
+		}
 		vec, err := ParseColor(hex)
 		if err != nil {
 			// Maybe should just print error instead of exit?
