@@ -26,6 +26,12 @@ $ vcolor "#FFE360"
 vec3(1.0, 0.89, 0.376)
 ```
 
+HTML/CSS color names are supported as well:
+```
+$ vcolor hotpink
+vec3(1.0, 0.412, 0.706)
+```
+
 It's also possible to get a color palette by ID from
 [COLOURlovers](http://www.colourlovers.com/)
 ```
